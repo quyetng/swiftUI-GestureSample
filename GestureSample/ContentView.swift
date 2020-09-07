@@ -11,6 +11,7 @@ import SwiftUI
 struct ContentView: View {
     @GestureState var isDetectingLongPress = false
     @State var totalNumberOfTaps = 0
+    @State var doneCounting = false
     var body: some View {
         
         let press = LongPressGesture(minimumDuration: 1)
@@ -18,6 +19,8 @@ struct ContentView: View {
                 gestureState = currentState
         }.onChanged { _ in
             self.totalNumberOfTaps += 1
+        }.onEnded { _ in
+            self.doneCounting = true
         }
         
         return VStack {
@@ -27,7 +30,7 @@ struct ContentView: View {
             Circle()
                 .fill(isDetectingLongPress ? Color.yellow : Color.green)
                 .frame(width: 100, height: 100, alignment: .center)
-                .gesture(press)
+                .gesture(doneCounting ? nil : press)
         }
         
     }
