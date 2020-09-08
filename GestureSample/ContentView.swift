@@ -10,23 +10,29 @@ import SwiftUI
 
 struct ContentView: View {
    
-    @State private var tapped = false
+    @GestureState var isDetectingLongPress = false
+    @State var completedLongPress = false
     
-    // create and config the tap gesture
-    var tap: some Gesture {
-        TapGesture(count: 1) // this require 1 tap
-            .onEnded { _ in
-                self.tapped = !self.tapped
-        } // Add action when gesture is ended
+    // create and config the long press gesture
+    var longPress: some Gesture {
+      LongPressGesture(minimumDuration: 3)
+        .updating($isDetectingLongPress, body: { (currentState, gestureState, transaction) in
+            // update gestureState to currentState
+            gestureState = currentState
+            transaction.animation = Animation.easeIn(duration: 2.0)
+        })
+        .onEnded { (finished) in
+            self.completedLongPress = finished
+        }
         
     }
     var body: some View {
         
       // Add tap gesture to the circle
         
-        Circle().fill(self.tapped ? Color.blue : Color.red)
+        Circle().fill(self.isDetectingLongPress ? Color.red : (self.completedLongPress ? Color.green : Color.blue))
             .frame(width: 100, height: 100, alignment: .center)
-        .gesture(tap)
+        .gesture(longPress)
         
     }
 }
