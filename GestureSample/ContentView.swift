@@ -9,29 +9,20 @@
 import SwiftUI
 
 struct ContentView: View {
+    @GestureState var magnifyBy = CGFloat(1.0)
    
-    @GestureState var isDectectDragging = false
-    @State var isDragging = false
-    // create and config the gesture
-    var drag: some Gesture {
-        
-     DragGesture()
-        .onChanged({ (_) in
-            self.isDragging = true
-        })
-        .onEnded { (_) in
-            self.isDragging = false
+    var magnification: some Gesture {
+        MagnificationGesture()
+            .updating($magnifyBy) { (currentState, gestureState, transaction) in
+                gestureState = currentState
         }
-        
     }
     var body: some View {
         
-      // Add the gesture to the circle
-        
-       Circle()
-        .fill(self.isDragging ? Color.red : Color.blue)
-        .frame(width: 100, height: 100, alignment: .center)
-        .gesture(drag)
+      Circle()
+        .fill(Color.green)
+        .frame(width: 100 * magnifyBy, height: 100 * magnifyBy, alignment: .center)
+        .gesture(magnification)
         
     }
 }
