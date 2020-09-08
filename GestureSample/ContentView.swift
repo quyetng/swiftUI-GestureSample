@@ -9,20 +9,21 @@
 import SwiftUI
 
 struct ContentView: View {
-    @GestureState var magnifyBy = CGFloat(1.0)
-   
-    var magnification: some Gesture {
-        MagnificationGesture()
-            .updating($magnifyBy) { (currentState, gestureState, transaction) in
-                gestureState = currentState
+    @State var angle = Angle(degrees: 45.0)
+    
+    var rotation: some Gesture {
+        RotationGesture().onChanged { (angle) in
+            self.angle = angle
         }
     }
+    
     var body: some View {
         
-      Circle()
-        .fill(Color.green)
-        .frame(width: 100 * magnifyBy, height: 100 * magnifyBy, alignment: .center)
-        .gesture(magnification)
+      Rectangle()
+        .fill(Color.blue)
+        .frame(width: 200, height: 200, alignment: .center)
+        .rotationEffect(angle)
+        .gesture(rotation)
         
     }
 }
